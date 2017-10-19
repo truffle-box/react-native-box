@@ -16,13 +16,11 @@ export default class App extends React.Component {
   }
 
   componentWillMount() {
-    console.log('COMPONENT WILL MOUNT');
     // Get network provider and web3 instance.
     // See utils/getWeb3 for more info.
 
     getWeb3
       .then(results => {
-        console.log('results: ', results);
         this.setState({
           web3: results.web3
         });
@@ -35,7 +33,6 @@ export default class App extends React.Component {
   }
 
   instantiateContract() {
-    console.log('instantiate contract');
     /*
      * SMART CONTRACT EXAMPLE
      *
@@ -61,7 +58,6 @@ export default class App extends React.Component {
         // Get the value from the contract to prove it worked.
         return simpleStorageInstance.get.call({from: accounts[0]});
       }).then((result) => {
-        console.log('result: ', result);
         // Update state with the result.
         return this.setState({ storageValue: result.c[0] });
       });
