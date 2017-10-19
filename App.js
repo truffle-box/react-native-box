@@ -1,54 +1,77 @@
 import './shim';
 import React from 'react';
+import SimpleStorageContract from './build/contracts/SimpleStorage.json';
+import getWeb3 from './utils/getWeb3'
 import { StyleSheet, Text, View } from 'react-native';
 import Web3 from 'web3';
-import SimpleStorageContract from './build/contracts/SimpleStorage.json';
 
 export default class App extends React.Component {
   constructor() {
     super();
 
+    this.state = {
+      storageValue: 0,
+      web3: null
+    };
+  }
+
+  componentWillMount() {
+    console.log('COMPONENT WILL MOUNT');
+    // Get network provider and web3 instance.
+    // See utils/getWeb3 for more info.
+
+    getWeb3
+      .then(results => {
+        console.log('results: ', results);
+        this.setState({
+          web3: results.web3
+        });
+        // Instantiate contract once web3 provided.
+        this.instantiateContract();
+      })
+      .catch(() => {
+        console.log('Error finding web3.');
+      });
+  }
+
+  instantiateContract() {
+    console.log('instantiate contract');
+    /*
+     * SMART CONTRACT EXAMPLE
+     *
+     * Normally these functions would be called in the context of a
+     * state management library, but for convenience I've placed them here.
+     */
+
     const contract = require('truffle-contract');
     const simpleStorage = contract(SimpleStorageContract);
-    const provider = new Web3.providers.HttpProvider('http://localhost:8545');
-    console.log(provider);
-    const web3 = new Web3(provider);
-    simpleStorage.setProvider(web3.currentProvider);
-    this.state = {
-      storageValue: 'Loading balance...',
-      accounts: [0],
-      instance: '',
-    };
+    simpleStorage.setProvider(this.state.web3.currentProvider);
+
+    // Declaring this for later so we can chain functions on SimpleStorage.
     let simpleStorageInstance;
-    web3.eth.getAccounts((error, accounts) => {
-      this.setState({
-        accounts
-      });
+
+    // Get accounts.
+    this.state.web3.eth.getAccounts((error, accounts) => {
       simpleStorage.deployed().then((instance) => {
         simpleStorageInstance = instance;
-        this.setState({
-          instance: instance.address,
-        });
+
         // Stores a given value, 5 by default.
-        console.log('test1');
         return simpleStorageInstance.set(5, {from: accounts[0]});
       }).then((result) => {
         // Get the value from the contract to prove it worked.
-        console.log('test2');
         return simpleStorageInstance.get.call({from: accounts[0]});
       }).then((result) => {
+        console.log('result: ', result);
         // Update state with the result.
-        console.log('test1');
         return this.setState({ storageValue: result.c[0] });
       });
     });
   }
+
   render() {
     return (
       <View style={styles.container}>
         <Text>{this.state.storageValue}</Text>
-        <Text>{this.state.instance}</Text>
-        <Text>{this.state.accounts[0]}</Text>
         <Text>Changes you make will automatically reload.</Text>
         <Text>Shake your phone to open the developer menu.</Text>
       </View>
