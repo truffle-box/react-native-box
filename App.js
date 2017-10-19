@@ -67,9 +67,12 @@ export default class App extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Text>{this.state.storageValue}</Text>
-        <Text>Changes you make will automatically reload.</Text>
-        <Text>Shake your phone to open the developer menu.</Text>
+        <Text>Good to Go!</Text>
+        <Text>Your Truffle Box is installed and ready.</Text>
+        <Text>Smart Contract Example</Text>
+        <Text>If your contracts compiled and migrated successfully, below will show a stored value of 5 (by default).</Text>
+        <Text>Try changing the value stored on line 56 of App.js.</Text>
+        <Text>The stored value is: {this.state.storageValue}</Text>
       </View>
     );
   }
