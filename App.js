@@ -19,32 +19,28 @@ export default class App extends React.Component {
       accounts: [0],
       instance: '',
     };
-    /*web3.eth.getBalance('0xd016e27a182990ff764b9e88a6348cff170f5574').then(bal => {
-      this.setState({
-        balance: bal,
-      });
-      })*/
-    // Get accounts.
     let simpleStorageInstance;
     web3.eth.getAccounts((error, accounts) => {
       this.setState({
         accounts
       });
-      return simpleStorage.at('0x5282e888c408e5c1a83c5abe40e20ecb168b0935').then((instance) => {
+      simpleStorage.deployed().then((instance) => {
         simpleStorageInstance = instance;
         this.setState({
           instance: instance.address,
         });
         // Stores a given value, 5 by default.
-      });
-        /*return simpleStorageInstance.set(5, {from: accounts[0]});
+        console.log('test1');
+        return simpleStorageInstance.set(5, {from: accounts[0]});
       }).then((result) => {
         // Get the value from the contract to prove it worked.
-        return simpleStorageInstance.get.call(accounts[0]);
+        console.log('test2');
+        return simpleStorageInstance.get.call({from: accounts[0]});
       }).then((result) => {
         // Update state with the result.
+        console.log('test1');
         return this.setState({ storageValue: result.c[0] });
-      });*/
+      });
     });
   }
   render() {
