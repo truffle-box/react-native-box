@@ -2,18 +2,25 @@ import './shim';
 import React from 'react';
 import SimpleStorageContract from './build/contracts/SimpleStorage.json';
 import getWeb3 from './utils/getWeb3'
-import { FlatList, StyleSheet, Text, View } from 'react-native';
+import { FlatList, StyleSheet, Text, View, TextInput, Button } from 'react-native';
 import Web3 from 'web3';
+
+const contract = require('truffle-contract');
+const simpleStorage = contract(SimpleStorageContract);
 
 export default class App extends React.Component {
   constructor() {
     super();
 
     this.state = {
-      storageValue: 0,
+      storageValue: 5,
+      pendingStorageValue: 0,
       web3: null,
       accounts: [],
+      simpleStorageInstance: null
     };
+
+    this.updateStorageValue = this.updateStorageValue.bind(this);
   }
 
   componentWillMount() {
@@ -40,9 +47,6 @@ export default class App extends React.Component {
      * Normally these functions would be called in the context of a
      * state management library, but for convenience I've placed them here.
      */
-
-    const contract = require('truffle-contract');
-    const simpleStorage = contract(SimpleStorageContract);
     simpleStorage.setProvider(this.state.web3.currentProvider);
 
     // Declaring this for later so we can chain functions on SimpleStorage.
@@ -52,17 +56,24 @@ export default class App extends React.Component {
     this.state.web3.eth.getAccounts(async (error, accounts) => {
       this.setState({ accounts });
 
-      simpleStorageInstance = await simpleStorage.deployed();
+      try {
+        simpleStorageInstance = await simpleStorage.deployed();
 
-      // Stores a given value, 5 by default.
-      await simpleStorageInstance.set(5, {from: accounts[0]});
-        
-      // Get the value from the contract to prove it worked.
-      let storageValue = await simpleStorageInstance.get.call({from: accounts[0]});
-
-      // Update state with the result.
-      this.setState({ storageValue: storageValue.c[0] });
+        this.setState({ simpleStorageInstance });
+      } catch(error) {
+        console.log(error);
+      }
     });
+  }
+
+  async updateStorageValue() {
+    let { simpleStorageInstance, pendingStorageValue, accounts} = this.state
+    await simpleStorageInstance.set(pendingStorageValue, {from: accounts[0]});
+
+    let storageValue = await simpleStorageInstance.get.call({from: accounts[0]});
+
+    // Update state with the result.
+    this.setState({ storageValue: storageValue.c[0] });  
   }
 
   render() {
@@ -79,6 +90,17 @@ export default class App extends React.Component {
         <FlatList
           data={this.state.accounts}
           renderItem={({item}) => <Text>{item}</Text>}
+        />
+        <TextInput
+          style={{height: 40}}
+          placeholder="Enter the new storage value!"
+          onChangeText={(value) => this.setState({pendingStorageValue: value})}
+        />
+        <Button
+          onPress={this.updateStorageValue}
+          title="Update Storage Value"
+          color="#841584"
+          accessibilityLabel="Update the storage value!"
         />
       </View>
     );
