@@ -2,7 +2,7 @@ import './shim';
 import React from 'react';
 import SimpleStorageContract from './build/contracts/SimpleStorage.json';
 import getWeb3 from './utils/getWeb3'
-import { StyleSheet, Text, View } from 'react-native';
+import { FlatList, StyleSheet, Text, View } from 'react-native';
 import Web3 from 'web3';
 
 export default class App extends React.Component {
@@ -11,7 +11,8 @@ export default class App extends React.Component {
 
     this.state = {
       storageValue: 0,
-      web3: null
+      web3: null,
+      accounts: [],
     };
   }
 
@@ -32,7 +33,7 @@ export default class App extends React.Component {
       });
   }
 
-  instantiateContract() {
+  async instantiateContract() {
     /*
      * SMART CONTRACT EXAMPLE
      *
@@ -48,19 +49,19 @@ export default class App extends React.Component {
     let simpleStorageInstance;
 
     // Get accounts.
-    this.state.web3.eth.getAccounts((error, accounts) => {
-      simpleStorage.deployed().then((instance) => {
-        simpleStorageInstance = instance;
+    this.state.web3.eth.getAccounts(async (error, accounts) => {
+      this.setState({ accounts });
 
-        // Stores a given value, 5 by default.
-        return simpleStorageInstance.set(5, {from: accounts[0]});
-      }).then((result) => {
-        // Get the value from the contract to prove it worked.
-        return simpleStorageInstance.get.call({from: accounts[0]});
-      }).then((result) => {
-        // Update state with the result.
-        return this.setState({ storageValue: result.c[0] });
-      });
+      simpleStorageInstance = await simpleStorage.deployed();
+
+      // Stores a given value, 5 by default.
+      await simpleStorageInstance.set(5, {from: accounts[0]});
+        
+      // Get the value from the contract to prove it worked.
+      let storageValue = await simpleStorageInstance.get.call({from: accounts[0]});
+
+      // Update state with the result.
+      this.setState({ storageValue: storageValue.c[0] });
     });
   }
 
@@ -68,8 +69,11 @@ export default class App extends React.Component {
     return (
       <View style={styles.container}>
         <Text>{this.state.storageValue}</Text>
-        <Text>Changes you make will automatically reload.</Text>
-        <Text>Shake your phone to open the developer menu.</Text>
+        <Text>Picker Below</Text>
+        <FlatList
+          data={this.state.accounts}
+          renderItem={({item}) => <Text>{item}</Text>}
+        />
       </View>
     );
   }
@@ -77,6 +81,7 @@ export default class App extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
+    margin: 10,
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
