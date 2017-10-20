@@ -39,6 +39,7 @@ export default class Create extends React.Component {
   render() {
     return (
       <View style={{ padding: 20}}>
+        
         <Card title="Mnemonic Words">
           <Text style={{ fontWeight: 'bold', color: 'red', textAlign: 'center'}}>
             These 12 words are the only way to restore your accounts. Save them somewhere safe and secret.

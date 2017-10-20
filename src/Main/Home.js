@@ -1,8 +1,9 @@
 import React from 'react';
 import SimpleStorageContract from '../../build/contracts/SimpleStorage.json';
 import getWeb3 from '../utils/getWeb3'
-import { FlatList, StyleSheet, Text, View, TextInput, Button } from 'react-native';
+import { FlatList, StyleSheet, Text, View, TextInput, ScrollView } from 'react-native';
 import Web3 from 'web3';
+import { Card, ListItem, Button } from 'react-native-elements'
 
 const contract = require('truffle-contract');
 const simpleStorage = contract(SimpleStorageContract);
@@ -69,10 +70,11 @@ export default class Home extends React.Component {
   }
 
   async updateStorageValue() {
-    let { simpleStorageInstance, pendingStorageValue, accounts} = this.state
-    await simpleStorageInstance.set(pendingStorageValue, {from: accounts[0]});
+    let { simpleStorageInstance, pendingStorageValue} = this.state;
+    let address = this.props.screenProps;
+    await simpleStorageInstance.set(pendingStorageValue, {from: address});
 
-    let storageValue = await simpleStorageInstance.get.call({from: accounts[0]});
+    let storageValue = await simpleStorageInstance.get.call({from: address});
 
     // Update state with the result.
     this.setState({ storageValue: storageValue.c[0] });  
@@ -81,20 +83,18 @@ export default class Home extends React.Component {
   render() {
     console.log(this.state.accounts);
     return (
-      <View style={styles.container}>
-        <Text>Good to Go!</Text>
-        <Text>Your Truffle Box is installed and ready.</Text>
-        <Text>Smart Contract Example</Text>
-        <Text>If your contracts compiled and migrated successfully, below will show a stored value of 5 (by default).</Text>
-        <Text>Try changing the value stored on line 56 of App.js.</Text>
-        <Text>The stored value is: {this.state.storageValue}</Text>
-        <Text>Current Address: {this.props.screenProps.address}</Text>
-        {/* <Text>Here are your accounts ({this.state.accounts.length})</Text> */}
-        <FlatList
-          data={this.state.accounts}
-          renderItem={({item}, i) => <Text key={i}>{item}</Text>}
-        />
-        <TextInput
+      <ScrollView>
+        <Card>
+          <Text>Your Truffle Box is installed and ready.</Text>  
+        </Card>
+        <Card title="Smart Contract Example">
+          <Text>If your contracts compiled and migrated successfully, below will show a stored value of 5 (by default).</Text>
+          <Text>Try changing the value stored on line 56 of App.js.</Text>
+          <Text>The stored value is: {this.state.storageValue}</Text>
+          <Text>Current Address: {this.props.screenProps.address}</Text>
+        </Card>        
+        <Card>
+          <TextInput
           style={{height: 40}}
           placeholder="Enter the new storage value!"
           onChangeText={(value) => this.setState({pendingStorageValue: value})}
@@ -104,12 +104,15 @@ export default class Home extends React.Component {
           title="Update Storage Value"
           color="#841584"
           accessibilityLabel="Update the storage value!"
-        />
-        <Button
-      onPress={() => this.props.navigation.navigate('Network')}
-      title="Choose Network"
-      />
-      </View>
+        />  
+        </Card>
+        <Card>
+          <Button
+            onPress={() => this.props.navigation.navigate('Network')}
+            title="Choose Network"
+            />  
+        </Card>
+      </ScrollView>
     );
   }
 }
