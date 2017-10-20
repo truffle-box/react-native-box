@@ -1,4 +1,5 @@
 import Web3 from 'web3';
+import { Platform } from 'react-native';
 
 let getWeb3 = new Promise(function(resolve, reject) {
   // Wait for loading completion to avoid race conditions with web3 injection timing.
@@ -18,8 +19,15 @@ let getWeb3 = new Promise(function(resolve, reject) {
 
     resolve(results);
   } else {
+    // iOS and Android have different host computer hostnames.
+    var testRpcUrl = '10.0.2.2';
+
+    if (Platform.OS === 'ios') {
+      testRpcUrl = 'localhost';
+    }
+
     // Fallback to localhost if no web3 injection.
-    var provider = new Web3.providers.HttpProvider('http://localhost:8545');
+    var provider = new Web3.providers.HttpProvider('http://' + testRpcUrl + ':8545');
 
     web3 = new Web3(provider);
 
