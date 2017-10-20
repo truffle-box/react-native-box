@@ -1,4 +1,5 @@
 import './shim';
+import getWeb3 from './src/utils/getWeb3';
 import React from 'react';
 import Main from './src/Main';
 import Wallet from './src/Wallet';
@@ -17,27 +18,39 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      wallet: null,
-      address: null
-    }
+      address: null,
+      web3: getWeb3()
+    };
   }
 
-  createWallet(wallet, address) {
-    this.setState({ wallet, address });
+  componentWillMount() {
+    this.state.web3.eth.getAccountsPromise().then((accounts) => {
+      this.setState({
+        address: accounts[0],
+      });
+    });
+  }
+
+  async setWallet(mnemonic) {
+    const web3 = getWeb3(mnemonic);
+    const accounts = await web3.eth.getAccountsPromise();
+    this.setState({
+      web3,
+      address: accounts[0],
+    });
   }
 
   setAccount(address) {
-    console.log('address', address);
     this.setState({ address });
   }
 
   render() {
     const props = {
       address: this.state.address,
-      wallet: this.state.wallet,
-      createWalletCB: this.createWallet.bind(this),
-      setAccount: this.setAccount.bind(this)
-    }
+      setAccount: this.setAccount.bind(this),
+      web3: this.state.web3,
+      setWallet: this.setWallet.bind(this)
+    };
 
     return <SimpleApp screenProps={props}/>;
   }

@@ -3,57 +3,27 @@ import { Platform } from 'react-native';
 import Promise from 'bluebird';
 import HDWalletProvider from 'truffle-hdwallet-provider';
 
-let results;
-let getWeb3 = new Promise(function(resolve, reject) {
-  if (results) {
-    return resolve(results);
+const getWeb3 = (mnemonic) => {
+  if (!mnemonic) {
+    mnemonic = 'knee violin certain rebuild rival couch wonder bind bridge delay tourist poet';
   }
-  // Wait for loading completion to avoid race conditions with web3 injection timing.
-  var web3 = window.web3;
+  // iOS and Android have different host computer hostnames.
+  var testRpcUrl = '10.0.2.2';
 
-  // Checking if Web3 has been injected by the browser (Mist/MetaMask)
-  if (typeof web3 !== 'undefined') {
-    // Use Mist/MetaMask's provider.
-    web3 = new Web3(web3.currentProvider);
-
-    if (typeof web3.eth.getAccountsPromise === "undefined") {
-      Promise.promisifyAll(web3.eth, { suffix: "Promise" });
-    }
-    results = {
-      web3: web3
-    };
-
-    console.log('Injected web3 detected.');
-
-    resolve(results);
-  } else {
-    // iOS and Android have different host computer hostnames.
-    var testRpcUrl = '10.0.2.2';
-
-    if (Platform.OS === 'ios') {
-      testRpcUrl = 'localhost';
-    }
-
-    // Fallback to localhost if no web3 injection.
-    //var provider = new Web3.providers.HttpProvider('http://' + testRpcUrl + ':8545');
-    var provider = new HDWalletProvider('knee violin certain rebuild rival couch wonder bind bridge delay tourist poet', 'https://ropsten.infura.io/');
-
-    web3 = new Web3(provider);
-
-    if (typeof web3.eth.getAccountsPromise === "undefined") {
-      Promise.promisifyAll(web3.eth, { suffix: "Promise" });
-    }
-
-    results = {
-      web3: web3
-    };
-
-    console.log('No web3 instance injected, using Local web3.');
-
-    resolve(results);
+  if (Platform.OS === 'ios') {
+    testRpcUrl = 'localhost';
   }
-});
 
-//export changeProvider()
+  //var provider = new Web3.providers.HttpProvider('http://' + testRpcUrl + ':8545');
+  // var provider = new HDWalletProvider('knee violin certain rebuild rival couch wonder bind bridge delay tourist poet', 'https://ropsten.infura.io/');
+  const provider = new HDWalletProvider(mnemonic, 'https://ropsten.infura.io/');
+
+  const web3 = new Web3(provider);
+
+  if (typeof web3.eth.getAccountsPromise === "undefined") {
+    Promise.promisifyAll(web3.eth, { suffix: "Promise" });
+  }
+  return web3;
+};
 
 export default getWeb3;

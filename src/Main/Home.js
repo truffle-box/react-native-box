@@ -1,8 +1,6 @@
 import React from 'react';
 import SimpleStorageContract from '../../build/contracts/SimpleStorage.json';
-import getWeb3 from '../utils/getWeb3'
 import { FlatList, StyleSheet, Text, View, TextInput, ScrollView } from 'react-native';
-import Web3 from 'web3';
 import { Card, ListItem, Button } from 'react-native-elements'
 
 const contract = require('truffle-contract');
@@ -18,7 +16,6 @@ export default class Home extends React.Component {
     this.state = {
       storageValue: 0,
       pendingStorageValue: 0,
-      web3: null,
       accounts: [],
       simpleStorageInstance: null
     };
@@ -26,21 +23,11 @@ export default class Home extends React.Component {
     this.updateStorageValue = this.updateStorageValue.bind(this);
   }
 
-  componentWillMount() {
-    // Get network provider and web3 instance.
-    // See utils/getWeb3 for more info.
-
-    getWeb3
-      .then(results => {
-        this.setState({
-          web3: results.web3
-        });
-        // Instantiate contract once web3 provided.
-        this.instantiateContract();
-      })
-      .catch(() => {
-        console.log('Error finding web3.');
-      });
+  componentWillReceiveProps(props) {
+    if (props && props.screenProps && props.screenProps.web3) {
+      this.instantiateContract();
+    }
+    console.log('props: ', props);
   }
 
   async instantiateContract() {
@@ -50,7 +37,7 @@ export default class Home extends React.Component {
      * Normally these functions would be called in the context of a
      * state management library, but for convenience I've placed them here.
      */
-    simpleStorage.setProvider(this.state.web3.currentProvider);
+    simpleStorage.setProvider(this.props.screenProps.web3.currentProvider);
 
     // Declaring this for later so we can chain functions on SimpleStorage.
     let simpleStorageInstance;
@@ -68,9 +55,12 @@ export default class Home extends React.Component {
     let { simpleStorageInstance, pendingStorageValue} = this.state;
     let { address } = this.props.screenProps;
     console.log('setting: ', address);
+    let storageValue = await simpleStorageInstance.get.call({from: address});
+    this.setState({ storageValue: storageValue.c[0] });  
+
     await simpleStorageInstance.set(pendingStorageValue, {from: address});
 
-    let storageValue = await simpleStorageInstance.get.call({from: address});
+    storageValue = await simpleStorageInstance.get.call({from: address});
 
     // Update state with the result.
     this.setState({ storageValue: storageValue.c[0] });  

@@ -1,8 +1,6 @@
 import React from 'react';
-import getWeb3 from '../utils/getWeb3';
 import { FlatList, StyleSheet, Text, View, TextInput } from 'react-native';
 import { Button, Card } from 'react-native-elements';
-import Web3 from 'web3';
 import { StackNavigator } from 'react-navigation';
 import ModalPicker from 'react-native-modal-picker'
 
@@ -21,29 +19,14 @@ export default class Home extends React.Component {
     this.onChange = this.onChange.bind(this);
   }
 
-  componentWillMount() {
-    // Get network provider and web3 instance.
-    // See utils/getWeb3 for more info.
-    getWeb3
-      .then(results => {
-        this.setState({
-          web3: results.web3
-        });
-        this.instantiateAccountsWithBalances();
-      })
-      .catch(() => {
-        console.log('Error finding web3.');
-      });
-  }
-
   async instantiateAccountsWithBalances () {
-    const accounts = await this.state.web3.eth.getAccountsPromise();
-    const balance = await this.state.web3.eth.getBalancePromise(accounts[0]);
-    const transactions = await this.state.web3.eth.getTransactionCountPromise(accounts[0]);
+    const accounts = await this.props.screenProps.web3.eth.getAccountsPromise();
+    const balance = await this.props.screenProps.web3.eth.getBalancePromise(accounts[0]);
+    const transactions = await this.props.screenProps.web3.eth.getTransactionCountPromise(accounts[0]);
     this.setState({
       accounts: accounts,
       account: accounts[0],
-      balance: this.state.web3.fromWei(balance, 'ether'),
+      balance: this.props.screenProps.web3.fromWei(balance, 'ether'),
       transactions,
     });
     if (this.props.screenProps.setAccount) {
@@ -56,11 +39,11 @@ export default class Home extends React.Component {
     if (this.props.screenProps.setAccount) {
       this.props.screenProps.setAccount(account);
     }
-    const balance = await this.state.web3.eth.getBalancePromise(account);
-    const transactions = await this.state.web3.eth.getTransactionCountPromise(account)
+    const balance = await this.props.screenProps.web3.eth.getBalancePromise(account);
+    const transactions = await this.props.screenProps.web3.eth.getTransactionCountPromise(account)
     this.setState({
       account,
-      balance: this.state.web3.fromWei(balance, 'ether'),
+      balance: this.props.screenProps.web3.fromWei(balance, 'ether'),
       transactions,
     });
   }
