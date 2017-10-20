@@ -1,6 +1,7 @@
 import React from 'react';
 import getWeb3 from '../utils/getWeb3';
-import { FlatList, StyleSheet, Text, View, TextInput, Button } from 'react-native';
+import { FlatList, StyleSheet, Text, View, TextInput } from 'react-native';
+import { Button, Card } from 'react-native-elements';
 import Web3 from 'web3';
 import { StackNavigator } from 'react-navigation';
 import ModalPicker from 'react-native-modal-picker'
@@ -63,14 +64,26 @@ export default class Home extends React.Component {
           this.state.accounts.map((a) => ({ key: a, label: a, }));
     return (
       <View>
-        <Text>Balance: {this.state.balance.toString()}</Text>
-        <Text>Transactions: {this.state.transactions}</Text>
-        <ModalPicker
-          initValue={this.state.account}
-          data={data}
-          style={{height: 100}}
-          onChange={this.onChange}
-        />
+        <Card title="Wallet">
+          <Text style={{ textAlign: 'center', fontSize: 30, fontWeight: 'bold' }}>
+            Balance
+          </Text>
+          <Text style={{ textAlign: 'center', fontSize: 20, fontWeight: 'bold', color: 'green'}}>
+            {this.state.balance.toString()}
+          </Text>
+          <Text style={{ textAlign: 'center', fontSize: 20, fontWeight: 'bold' }}>
+            Number of transactions
+          </Text>
+          <Text style={{ textAlign: 'center', fontSize: 15 }}>
+            {this.state.transactions}
+          </Text>
+          <ModalPicker
+            initValue={this.state.account}
+            data={data}
+      style={{height: 100, padding: 50}}
+            onChange={this.onChange}
+          />
+        </Card>
         <Button
           onPress={() => this.props.navigation.navigate('Create')}
           title="Create wallet" />
