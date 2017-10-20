@@ -10,7 +10,7 @@ export default class Home extends React.Component {
   }
   render() {
     return (
-        <View>
+      <View>
         <Text>Hello wallet</Text>
         <Button
           onPress={() => this.props.navigation.navigate('Create')}
@@ -18,7 +18,7 @@ export default class Home extends React.Component {
         <Button
           onPress={() => this.props.navigation.navigate('Import')}
           title="Import wallet" />
-        </View>
+      </View>
     );
   }
 }

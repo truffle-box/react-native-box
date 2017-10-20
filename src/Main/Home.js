@@ -1,4 +1,3 @@
-import '../../shim';
 import React from 'react';
 import SimpleStorageContract from '../../build/contracts/SimpleStorage.json';
 import getWeb3 from '../utils/getWeb3'
@@ -80,16 +79,17 @@ export default class Home extends React.Component {
   }
 
   render() {
+    console.log(this.state.accounts);
     return (
       <View style={styles.container}>
-        <Text>{this.state.storageValue}</Text>
         <Text>Good to Go!</Text>
         <Text>Your Truffle Box is installed and ready.</Text>
         <Text>Smart Contract Example</Text>
         <Text>If your contracts compiled and migrated successfully, below will show a stored value of 5 (by default).</Text>
         <Text>Try changing the value stored on line 56 of App.js.</Text>
         <Text>The stored value is: {this.state.storageValue}</Text>
-        <Text>Here are your accounts ({this.state.accounts.length})</Text>
+        <Text>Current Address: {this.props.screenProps.address}</Text>
+        {/* <Text>Here are your accounts ({this.state.accounts.length})</Text> */}
         <FlatList
           data={this.state.accounts}
           renderItem={({item}, i) => <Text key={i}>{item}</Text>}

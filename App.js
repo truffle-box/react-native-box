@@ -1,3 +1,4 @@
+import './shim';
 import React from 'react';
 import Main from './src/Main';
 import Wallet from './src/Wallet';
@@ -13,10 +14,25 @@ const SimpleApp = TabNavigator({
 });
 
 export default class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      wallet: null,
+      address: null
+    }
+  }
+
+  createWallet(wallet, address) {
+    this.setState({ wallet, address });
+  }
+
   render() {
-    return <SimpleApp />;
+    const props = {
+      address: this.state.address,
+      wallet: this.state.wallet,
+      createWalletCB: this.createWallet.bind(this)
+    }
+
+    return <SimpleApp screenProps={props}/>;
   }
 }
-
-//AppRegistry.registerComponent('SimpleApp', () => SimpleApp);
-
