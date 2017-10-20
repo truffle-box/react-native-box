@@ -1,9 +1,12 @@
 import Web3 from 'web3';
 import { Platform } from 'react-native';
 
+let results;
 let getWeb3 = new Promise(function(resolve, reject) {
+  if (results) {
+    return resolve(results);
+  }
   // Wait for loading completion to avoid race conditions with web3 injection timing.
-  var results;
   var web3 = window.web3;
 
   // Checking if Web3 has been injected by the browser (Mist/MetaMask)
