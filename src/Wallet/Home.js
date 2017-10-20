@@ -46,10 +46,16 @@ export default class Home extends React.Component {
       balance: this.state.web3.fromWei(balance, 'ether'),
       transactions,
     });
+    if (this.props.screenProps.setAccount) {
+      this.props.screenProps.setAccount(accounts[0]);
+    }
   }
 
   async onChange(option) {
     const account = option.key;
+    if (this.props.screenProps.setAccount) {
+      this.props.screenProps.setAccount(account);
+    }
     const balance = await this.state.web3.eth.getBalancePromise(account);
     const transactions = await this.state.web3.eth.getTransactionCountPromise(account)
     this.setState({

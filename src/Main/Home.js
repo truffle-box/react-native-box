@@ -16,7 +16,7 @@ export default class Home extends React.Component {
     super();
 
     this.state = {
-      storageValue: 5,
+      storageValue: 0,
       pendingStorageValue: 0,
       web3: null,
       accounts: [],
@@ -55,23 +55,19 @@ export default class Home extends React.Component {
     // Declaring this for later so we can chain functions on SimpleStorage.
     let simpleStorageInstance;
 
-    // Get accounts.
-    this.state.web3.eth.getAccounts(async (error, accounts) => {
-      this.setState({ accounts });
-
-      try {
-        simpleStorageInstance = await simpleStorage.deployed();
-
-        this.setState({ simpleStorageInstance });
-      } catch(error) {
-        console.log(error);
-      }
-    });
+    try {
+      simpleStorageInstance = await simpleStorage.at('0x01dc2837360d57fe3b596d98e0ef56dbb945690c');
+      let storageValue = await simpleStorageInstance.get.call();
+      this.setState({ simpleStorageInstance, storageValue: storageValue.toString(10) });
+    } catch(error) {
+      console.log(error);
+    }
   }
 
   async updateStorageValue() {
     let { simpleStorageInstance, pendingStorageValue} = this.state;
-    let address = this.props.screenProps;
+    let { address } = this.props.screenProps;
+    console.log('setting: ', address);
     await simpleStorageInstance.set(pendingStorageValue, {from: address});
 
     let storageValue = await simpleStorageInstance.get.call({from: address});
@@ -86,12 +82,10 @@ export default class Home extends React.Component {
         <Card>
           <Text>Your Truffle Box is installed and ready.</Text>  
         </Card>
-        <Card title="Smart Contract Example">
-          <Text>If your contracts compiled and migrated successfully, below will show a stored value of 5 (by default).</Text>
-          <Text>Try changing the value stored on line 56 of App.js.</Text>
+        <Card title="Simple storage">
           <Text>The stored value is: {this.state.storageValue}</Text>
           <Text>Current Address: {this.props.screenProps.address}</Text>
-        </Card>        
+        </Card>
         <Card>
           <TextInput
           style={{height: 40}}
@@ -101,7 +95,6 @@ export default class Home extends React.Component {
         <Button
           onPress={this.updateStorageValue}
           title="Update Storage Value"
-          color="#841584"
           accessibilityLabel="Update the storage value!"
         />  
         </Card>

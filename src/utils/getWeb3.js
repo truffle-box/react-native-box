@@ -1,6 +1,7 @@
 import Web3 from 'web3';
 import { Platform } from 'react-native';
 import Promise from 'bluebird';
+import HDWalletProvider from 'truffle-hdwallet-provider';
 
 let results;
 let getWeb3 = new Promise(function(resolve, reject) {
@@ -34,7 +35,8 @@ let getWeb3 = new Promise(function(resolve, reject) {
     }
 
     // Fallback to localhost if no web3 injection.
-    var provider = new Web3.providers.HttpProvider('http://' + testRpcUrl + ':8545');
+    //var provider = new Web3.providers.HttpProvider('http://' + testRpcUrl + ':8545');
+    var provider = new HDWalletProvider('knee violin certain rebuild rival couch wonder bind bridge delay tourist poet', 'https://ropsten.infura.io/');
 
     web3 = new Web3(provider);
 
@@ -51,5 +53,7 @@ let getWeb3 = new Promise(function(resolve, reject) {
     resolve(results);
   }
 });
+
+//export changeProvider()
 
 export default getWeb3;

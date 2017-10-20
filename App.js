@@ -26,11 +26,17 @@ export default class App extends React.Component {
     this.setState({ wallet, address });
   }
 
+  setAccount(address) {
+    console.log('address', address);
+    this.setState({ address });
+  }
+
   render() {
     const props = {
       address: this.state.address,
       wallet: this.state.wallet,
-      createWalletCB: this.createWallet.bind(this)
+      createWalletCB: this.createWallet.bind(this),
+      setAccount: this.setAccount.bind(this)
     }
 
     return <SimpleApp screenProps={props}/>;
