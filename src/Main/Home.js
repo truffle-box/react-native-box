@@ -92,7 +92,7 @@ export default class Home extends React.Component {
         {/* <Text>Here are your accounts ({this.state.accounts.length})</Text> */}
         <FlatList
           data={this.state.accounts}
-          renderItem={({item}, i) => <Text key={i}>{item}</Text>}
+          renderItem={({item}) => <Text key={item}>{item}</Text>}
         />
         <TextInput
           style={{height: 40}}

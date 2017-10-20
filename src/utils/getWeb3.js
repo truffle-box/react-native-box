@@ -1,5 +1,6 @@
 import Web3 from 'web3';
 import { Platform } from 'react-native';
+import Promise from 'bluebird';
 
 let results;
 let getWeb3 = new Promise(function(resolve, reject) {
@@ -14,6 +15,9 @@ let getWeb3 = new Promise(function(resolve, reject) {
     // Use Mist/MetaMask's provider.
     web3 = new Web3(web3.currentProvider);
 
+    if (typeof web3.eth.getAccountsPromise === "undefined") {
+      Promise.promisifyAll(web3.eth, { suffix: "Promise" });
+    }
     results = {
       web3: web3
     };
@@ -33,6 +37,10 @@ let getWeb3 = new Promise(function(resolve, reject) {
     var provider = new Web3.providers.HttpProvider('http://' + testRpcUrl + ':8545');
 
     web3 = new Web3(provider);
+
+    if (typeof web3.eth.getAccountsPromise === "undefined") {
+      Promise.promisifyAll(web3.eth, { suffix: "Promise" });
+    }
 
     results = {
       web3: web3
