@@ -1,6 +1,6 @@
 import React from 'react';
 import SimpleStorageContract from '../../build/contracts/SimpleStorage.json';
-import { FlatList, StyleSheet, Text, View, TextInput, ScrollView } from 'react-native';
+import { ActivityIndicator, FlatList, StyleSheet, Text, View, TextInput, ScrollView } from 'react-native';
 import { Card, ListItem, Button } from 'react-native-elements'
 
 const contract = require('truffle-contract');
@@ -57,6 +57,7 @@ export default class Home extends React.Component {
   }
 
   async updateStorageValue() {
+    this.setState({ loading: true });
     let { simpleStorageInstance, pendingStorageValue} = this.state;
     let { address } = this.props.screenProps;
     let storageValue = await simpleStorageInstance.get.call({from: address});
@@ -66,7 +67,7 @@ export default class Home extends React.Component {
     storageValue = await simpleStorageInstance.get.call({from: address});
 
     // Update state with the result.
-    this.setState({ storageValue: storageValue.c[0] });  
+    this.setState({ storageValue: storageValue.c[0], loading: false });  
   }
 
   render() {
@@ -85,11 +86,17 @@ export default class Home extends React.Component {
           placeholder="Enter the new storage value!"
           onChangeText={(value) => this.setState({pendingStorageValue: value})}
         />
-        <Button
-          onPress={this.updateStorageValue}
-          title="Update Storage Value"
-          accessibilityLabel="Update the storage value!"
-        />  
+        {
+          this.state.loading ?
+            (<ActivityIndicator
+             animating = {this.state.loading}
+             style = {styles.activityIndicator}/>) :
+            (<Button
+            onPress={this.updateStorageValue}
+            title="Update Storage Value"
+            accessibilityLabel="Update the storage value!"
+            />)
+        }
         </Card>
         <Card>
           <Text>Current network: {this.props.screenProps.network.name}</Text>
@@ -97,7 +104,7 @@ export default class Home extends React.Component {
           <Button
             onPress={() => this.props.navigation.navigate('Network')}
             title="Choose Network"
-            />  
+            /> 
         </Card>
       </ScrollView>
     );
@@ -112,4 +119,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  activityIndicator: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 40
+  }
 });
