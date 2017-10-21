@@ -43,7 +43,7 @@ export default class Home extends React.Component {
     let txnIn;
     let txnOut;
     try {
-      transactionList = await fetch(`https://ropsten.etherscan.io/api?module=account&action=txlist&address=${accounts[0]}&startblock=0&endblock=99999999&sort=desc`);
+      transactionList = await fetch(`https://ropsten.etherscan.io/api?module=account&action=txlist&address=${accounts[0]}&sort=desc`);
       transactionList = await transactionList.json();
       transactionList = transactionList.result;
       txnIn = transactionList.filter(t => t.to === accounts[0]);
@@ -118,7 +118,7 @@ export default class Home extends React.Component {
         </Card>
         <Card title="In">
           <List>
-        {txnIn.map(t => (<ListItem key={t.hash} title={`${web3.fromWei(t.value, 'ether')} Ether`} subtitle={truncateAddress(t.from)}/>))}
+        {txnIn.map(t => (<ListItem key={t.hash} title={`${web3.fromWei(t.value, 'ether')} Ether`} subtitle={truncateAddress(t.from)} onPress={() => this.props.navigation.navigate('TransactionDetails', { transaction: t })}/>))}
           </List>
         </Card>
         <Card title="Out">
