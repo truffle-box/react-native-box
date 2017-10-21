@@ -1,13 +1,29 @@
-import React from 'react';
-import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
-import { StackNavigator } from 'react-navigation';
+import NetworkList from './NetworkList';
+import { connect } from 'react-redux'
+import { networks } from '../utils/config';
+import getWeb3 from '../utils/getWeb3';
 
-export default class Network extends React.Component {
-  render() {
-    return (
-        <View>
-        <Text>Choose Network!</Text>
-        </View>
-    );
+const mapStateToProps = state => {
+  return {
+    networks: networks,
+    currentNetwork: state.currentNetwork
   }
 }
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onNetworkClick: (network) => {
+      const web3 = getWeb3(null, network.url);
+      
+      dispatch({ type: 'SET_NETWORK', network: network});
+      dispatch({ type: 'SET_WEB3', web3: web3});
+    }
+  }
+}
+
+const Network = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(NetworkList)
+  
+export default Network; 

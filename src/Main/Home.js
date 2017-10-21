@@ -25,18 +25,24 @@ export default class Home extends React.Component {
 
   componentWillReceiveProps(props) {
     if (props && props.screenProps && props.screenProps.web3) {
-      this.instantiateContract();
+      this.setState({
+        storageValue: 0,
+        pendingStorageValue: 0,
+        simpleStorageInstance: null
+      });
+      
+      this.instantiateContract(props.screenProps.web3);
     }
   }
 
-  async instantiateContract() {
+  async instantiateContract(web3) {
     /*
      * SMART CONTRACT EXAMPLE
      *
      * Normally these functions would be called in the context of a
      * state management library, but for convenience I've placed them here.
      */
-    simpleStorage.setProvider(this.props.screenProps.web3.currentProvider);
+    simpleStorage.setProvider(web3.currentProvider);
 
     // Declaring this for later so we can chain functions on SimpleStorage.
     let simpleStorageInstance;
@@ -57,7 +63,6 @@ export default class Home extends React.Component {
     this.setState({ storageValue: storageValue.c[0] });  
 
     await simpleStorageInstance.set(pendingStorageValue, {from: address});
-
     storageValue = await simpleStorageInstance.get.call({from: address});
 
     // Update state with the result.
@@ -87,6 +92,8 @@ export default class Home extends React.Component {
         />  
         </Card>
         <Card>
+          <Text>Current network: {this.props.screenProps.network.name}</Text>
+          <Text>URL: {this.props.screenProps.network.url}</Text>
           <Button
             onPress={() => this.props.navigation.navigate('Network')}
             title="Choose Network"

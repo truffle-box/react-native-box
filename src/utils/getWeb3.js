@@ -2,11 +2,17 @@ import Web3 from 'web3';
 import { Platform } from 'react-native';
 import Promise from 'bluebird';
 import HDWalletProvider from 'truffle-hdwallet-provider';
+import { ROPSTEN_RPC_URL } from './config';
 
-const getWeb3 = (mnemonic) => {
+const getWeb3 = (mnemonic, rpcUrl) => {
   if (!mnemonic) {
     mnemonic = 'knee violin certain rebuild rival couch wonder bind bridge delay tourist poet';
   }
+
+  if(!rpcUrl) {
+    rpcUrl = ROPSTEN_RPC_URL;
+  }
+  
   // iOS and Android have different host computer hostnames.
   var testRpcUrl = '10.0.2.2';
 
@@ -16,7 +22,7 @@ const getWeb3 = (mnemonic) => {
 
   //var provider = new Web3.providers.HttpProvider('http://' + testRpcUrl + ':8545');
   // var provider = new HDWalletProvider('knee violin certain rebuild rival couch wonder bind bridge delay tourist poet', 'https://ropsten.infura.io/');
-  const provider = new HDWalletProvider(mnemonic, 'https://ropsten.infura.io/');
+  const provider = new HDWalletProvider(mnemonic, rpcUrl);
 
   const web3 = new Web3(provider);
 

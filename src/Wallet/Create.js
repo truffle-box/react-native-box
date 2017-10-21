@@ -24,7 +24,7 @@ export default class Create extends React.Component {
 
   createWallet() {
     let mnemonic = this.state.mnemonic;
-    this.props.screenProps.setWallet(mnemonic);
+    this.props.setWallet(mnemonic);
     this.props.navigation.navigate('Main');
   }
 

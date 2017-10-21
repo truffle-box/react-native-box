@@ -13,32 +13,42 @@ export default class Home extends React.Component {
     tabBarLabel: 'Wallet',
   }
 
+  initialState = {
+    accounts: [],
+    account: '',
+    balance: 0,
+    hasInstantiated: false,
+    txnIn: [],
+    txnOut: [],
+    transactions: 0
+  };
+
   constructor() {
     super();
-    this.state = {
-      accounts: [],
-      account: '',
-      balance: 0,
-      hasInstantiated: false,
-      txnIn: [],
-      txnOut: [],
-    };
+    this.state = {...this.initialState};
     this.onChange = this.onChange.bind(this);
   }
 
-  componentWillReceiveProps(props) {
+  componentWillReceiveProps(props) {    
     if (props && props.screenProps && props.screenProps.web3) {
-      this.instantiateAccountsWithBalances();
+      this.setState({
+        balance: 0,
+        hasInstantiated: false,
+        txnIn: [],
+        txnOut: [],
+        transactions: 0
+      });
+      this.instantiateAccountsWithBalances(props.screenProps.web3);
     }
   }
 
-  async instantiateAccountsWithBalances () {
+  async instantiateAccountsWithBalances (web3) {
     if (this.state.hasInstantiated) {
       return;
     }
-    const accounts = await this.props.screenProps.web3.eth.getAccountsPromise();
-    const balance = await this.props.screenProps.web3.eth.getBalancePromise(accounts[0]);
-    const transactions = await this.props.screenProps.web3.eth.getTransactionCountPromise(accounts[0]);
+    const accounts = await web3.eth.getAccountsPromise();
+    const balance = await web3.eth.getBalancePromise(accounts[0]);
+    const transactions = await web3.eth.getTransactionCountPromise(accounts[0]);
     let transactionList;
     let txnIn;
     let txnOut;
@@ -54,21 +64,21 @@ export default class Home extends React.Component {
     this.setState({
       accounts: accounts,
       account: accounts[0],
-      balance: this.props.screenProps.web3.fromWei(balance, 'ether'),
+      balance: web3.fromWei(balance, 'ether'),
       transactions,
       hasInstantiated: true,
       txnIn,
       txnOut,
     });
-    if (this.props.screenProps.setAccount) {
-      this.props.screenProps.setAccount(accounts[0]);
+    if (this.props.setAccount) {
+      this.props.setAccount(accounts[0]);
     }
   }
 
   async onChange(option) {
     const account = option.key;
-    if (this.props.screenProps.setAccount) {
-      this.props.screenProps.setAccount(account);
+    if (this.props.setAccount) {
+      this.props.setAccount(account);
     }
     const balance = await this.props.screenProps.web3.eth.getBalancePromise(account);
     const transactions = await this.props.screenProps.web3.eth.getTransactionCountPromise(account)
@@ -91,7 +101,7 @@ export default class Home extends React.Component {
             Balance
           </Text>
           <Text style={{ textAlign: 'center', fontSize: 20, fontWeight: 'bold', color: 'green'}}>
-            {balance.toString()}
+            
           </Text>
           <Text style={{ textAlign: 'center', fontSize: 20, fontWeight: 'bold' }}>
             Number of transactions
