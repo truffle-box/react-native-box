@@ -6,6 +6,7 @@ import { StackNavigator } from 'react-navigation';
 import Home from './Wallet/Home';
 import Create from './Wallet/Create';
 import Import from './Wallet/Import';
+import Send from './Wallet/Send';
 
 const Wallet = StackNavigator({
   WalletHome: {
@@ -16,5 +17,6 @@ const Wallet = StackNavigator({
   },
   Create: { screen: Create },
   Import: { screen: Import },
+  Send: { screen: Send },
 });
 export default Wallet;
