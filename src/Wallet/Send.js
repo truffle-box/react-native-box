@@ -1,6 +1,6 @@
 import React from 'react';
 import getWeb3 from '../utils/getWeb3'
-import { StyleSheet, Text, View, TextInput } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Alert } from 'react-native';
 import Web3 from 'web3';
 import { StackNavigator } from 'react-navigation';
 import { List, ListItem, Button, Card } from 'react-native-elements';
@@ -11,8 +11,23 @@ export default class Send extends React.Component {
     this.send = this.send.bind(this);
   }
 
-  send() {
-    const { web3, account } = this.props.screenProps;
+  async send() {
+    const { web3, address } = this.props.screenProps;
+    if (!web3.isAddress(this.state.recipient)) {
+      Alert.alert('Recipient is not valid, please type in a valid address');
+      return;
+    }
+    console.log('web3: ', web3);
+    console.log('account: ', address);
+    console.log('recipient: ', this.state.recipient);
+    console.log('amount: ', this.state.amount);
+    const transactionReciept = await web3.eth.sendTransactionPromise({
+      from: address,
+      to: this.state.recipient,
+      value: web3.toWei(this.state.amount),
+    });
+    console.log('transactionReciept', transactionReciept);
+    Alert.alert(transactionReciept);
   }
 
   render() {

@@ -43,7 +43,7 @@ export default class Home extends React.Component {
     let txnIn;
     let txnOut;
     try {
-      transactionList = await fetch(`https://ropsten.etherscan.io/api?module=account&action=txlist&address=${accounts[0]}&startblock=0&endblock=99999999&sort=asc`);
+      transactionList = await fetch(`https://ropsten.etherscan.io/api?module=account&action=txlist&address=${accounts[0]}&startblock=0&endblock=99999999&sort=desc`);
       transactionList = await transactionList.json();
       transactionList = transactionList.result;
       txnIn = transactionList.filter(t => t.to === accounts[0]);
