@@ -3,3 +3,4 @@ node_modules/
 npm-debug.*
 build/
 android/local.properties
+android/.gradle
