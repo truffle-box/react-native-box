@@ -21,7 +21,7 @@ export default class App extends React.Component {
     const web3 = getWeb3();
 
     store.dispatch({ type: 'SET_WEB3', web3: web3 });
-    
+
     web3.eth.getAccountsPromise().then((accounts) => {
       store.dispatch({ type: 'SET_ACCOUNT', account: accounts[0] })
     });
@@ -29,7 +29,7 @@ export default class App extends React.Component {
 
   render() {
     return (
-      <Provider store={store}>      
+      <Provider store={store}>
         <SimpleApp />
       </Provider>
     );
