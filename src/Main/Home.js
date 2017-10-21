@@ -30,7 +30,6 @@ export default class Home extends React.Component {
         pendingStorageValue: 0,
         simpleStorageInstance: null
       });
-      
       this.instantiateContract(props.screenProps.web3);
     }
   }

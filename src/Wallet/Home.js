@@ -46,6 +46,7 @@ export default class Home extends React.Component {
     if (this.state.hasInstantiated) {
       return;
     }
+
     const accounts = await web3.eth.getAccountsPromise();
     const balance = await web3.eth.getBalancePromise(accounts[0]);
     const transactions = await web3.eth.getTransactionCountPromise(accounts[0]);
@@ -101,7 +102,7 @@ export default class Home extends React.Component {
             Balance
           </Text>
           <Text style={{ textAlign: 'center', fontSize: 20, fontWeight: 'bold', color: 'green'}}>
-            
+            {balance.toString()}
           </Text>
           <Text style={{ textAlign: 'center', fontSize: 20, fontWeight: 'bold' }}>
             Number of transactions
