@@ -1,6 +1,6 @@
 import React from 'react';
 import { FlatList, StyleSheet, Text, ScrollView, TextInput } from 'react-native';
-import { List, ListItem, Button, Card } from 'react-native-elements';
+import { List, ListItem, Button, Card, ButtonGroup } from 'react-native-elements';
 import { StackNavigator } from 'react-navigation';
 import ModalPicker from 'react-native-modal-picker'
 
@@ -118,13 +118,13 @@ export default class Home extends React.Component {
         </Card>
         <Card title="In">
           <List>
-        {txnIn.map(t => (<ListItem key={t.hash} title={`${web3.fromWei(t.value, 'ether')} Ether`} subtitle={truncateAddress(t.from)} onPress={() => this.props.navigation.navigate('TransactionDetails', { transaction: t })}/>))}
+            {txnIn.map(t => (<ListItem key={t.hash} title={`${web3.fromWei(t.value, 'ether')} Ether`} subtitle={truncateAddress(t.from)} onPress={() => this.props.navigation.navigate('TransactionDetails', { transaction: t })}/>))}
           </List>
         </Card>
         <Card title="Out">
-        <List>
-        {txnOut.map(t => (<ListItem key={t.hash} title={`${web3.fromWei(t.value, 'ether')} Ether`} subtitle={truncateAddress(t.to)} rightIcon={''}/>))}
-      </List>
+          <List>
+            {txnOut.map(t => (<ListItem key={t.hash} title={`${web3.fromWei(t.value, 'ether')} Ether`} subtitle={truncateAddress(t.to)} />))}
+          </List>
         </Card>
       </ScrollView>
     );
