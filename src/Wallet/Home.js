@@ -131,7 +131,7 @@ export default class Home extends React.Component {
         </Card>
         <Card title="Out">
           <List>
-            {txnOut.map(t => (<ListItem key={t.hash} title={`${web3.fromWei(t.value, 'ether')} Ether`} subtitle={truncateAddress(t.to)} />))}
+        {txnOut.map(t => (<ListItem key={t.hash} title={`${web3.fromWei(t.value, 'ether')} Ether`} subtitle={truncateAddress(t.to)} onPress={() => this.props.navigation.navigate('TransactionDetails', { transaction: t })}/>))}
           </List>
         </Card>
       </ScrollView>
