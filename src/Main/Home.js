@@ -27,7 +27,6 @@ export default class Home extends React.Component {
     if (props && props.screenProps && props.screenProps.web3) {
       this.instantiateContract();
     }
-    console.log('props: ', props);
   }
 
   async instantiateContract() {
@@ -54,7 +53,6 @@ export default class Home extends React.Component {
   async updateStorageValue() {
     let { simpleStorageInstance, pendingStorageValue} = this.state;
     let { address } = this.props.screenProps;
-    console.log('setting: ', address);
     let storageValue = await simpleStorageInstance.get.call({from: address});
     this.setState({ storageValue: storageValue.c[0] });  
 

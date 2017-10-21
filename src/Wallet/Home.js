@@ -48,8 +48,6 @@ export default class Home extends React.Component {
       transactionList = transactionList.result;
       txnIn = transactionList.filter(t => t.to === accounts[0]);
       txnOut = transactionList.filter(t => t.from === accounts[0]);
-      console.log('txIn: ', txnIn);
-      console.log('txOut: ', txnOut);
     } catch(e) {
       console.log('ERROR: ', e);
     }

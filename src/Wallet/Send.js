@@ -17,16 +17,11 @@ export default class Send extends React.Component {
       Alert.alert('Recipient is not valid, please type in a valid address');
       return;
     }
-    console.log('web3: ', web3);
-    console.log('account: ', address);
-    console.log('recipient: ', this.state.recipient);
-    console.log('amount: ', this.state.amount);
     const transactionReciept = await web3.eth.sendTransactionPromise({
       from: address,
       to: this.state.recipient,
       value: web3.toWei(this.state.amount),
     });
-    console.log('transactionReciept', transactionReciept);
     Alert.alert(transactionReciept);
   }
 

@@ -9,7 +9,6 @@ export default class Import extends React.Component {
   render() {
     const { transaction } = this.props.navigation.state.params;
     const { web3 } = this.props.screenProps;
-    console.log('this.props', this.props.navigation.state.params);
     const timestamp = new Date(parseInt(transaction.timeStamp) * 1000);
     return (
         <ScrollView>
