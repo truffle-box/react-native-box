@@ -37,11 +37,57 @@ const wallet = (state = null, action) => {
   }
 }
 
+const accounts = (state = [], action) => {
+  switch (action.type) { 
+    case 'SET_ACCOUNTS':
+      return [...action.accounts];
+    default:
+      return state;
+  }
+}
+
+const balances = (state = {}, action) => {
+  switch (action.type) {
+    case 'SET_BALANCE':
+      const newState = { ...state };
+      newState[action.address] = action.balance;
+      return newState;      
+    default:
+      return state;
+  }
+}
+
+const transactionCounts = (state = {}, action) => {
+  switch (action.type) {
+    case 'SET_TRANSACTION_COUNT':
+      const newState = { ...state };
+      newState[action.address] = action.transactionCount;
+      return newState;  
+    default:
+      return state;
+  }
+}
+
+const transactions = (state = { incoming: [], outgoing: [] }, action) => {
+  switch (action.type) {
+    case 'SET_INCOMING_TRANSACTIONS':
+      return { ...state, incoming: [...action.transactions] }
+    case 'SET_OUTGOING_TRANSACTIONS':
+      return { ...state, outgoing: [...action.transactions] }    
+    default:
+      return  state;
+  }
+}
+
 const reducer = combineReducers({
   currentNetwork: network,
   account: account,
+  accounts: accounts,
   web3: web3,
-  wallet: wallet
+  wallet: wallet,
+  balances: balances,
+  transactionCounts: transactionCounts,
+  transactions: transactions
 });
   
 export default reducer;

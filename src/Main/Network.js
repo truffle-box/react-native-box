@@ -1,7 +1,7 @@
 import NetworkList from './NetworkList';
 import { connect } from 'react-redux'
 import { networks } from '../utils/config';
-import getWeb3 from '../utils/getWeb3';
+import { getAccounts, setNetwork, networkChanged } from '../actions';
 
 const mapStateToProps = state => {
   return {
@@ -13,10 +13,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     onNetworkClick: (network) => {
-      const web3 = getWeb3(null, network.url);
-      
-      dispatch({ type: 'SET_NETWORK', network: network});
-      dispatch({ type: 'SET_WEB3', web3: web3});
+      dispatch(setNetwork(network));
     }
   }
 }

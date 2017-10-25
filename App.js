@@ -6,11 +6,13 @@ import {
   AppRegistry,
   Text,
 } from 'react-native';
-import { createStore } from 'redux';
-import reducer from './src/reducers';
-import { Provider } from 'react-redux'
+import { Provider } from 'react-redux';
+import store from './src/store';
+import { setWeb3, getAccount, getAccounts, getBalance, getTransactionCount } from './src/actions';
 
-const store = createStore(reducer);
+const web3 = getWeb3();
+
+store.dispatch(setWeb3(web3));
 
 export default class App extends React.Component {
   constructor(props) {
@@ -18,13 +20,7 @@ export default class App extends React.Component {
   }
 
   componentWillMount() {
-    const web3 = getWeb3();
-
-    store.dispatch({ type: 'SET_WEB3', web3: web3 });
-
-    web3.eth.getAccountsPromise().then((accounts) => {
-      store.dispatch({ type: 'SET_ACCOUNT', account: accounts[0] })
-    });
+    store.dispatch(getAccount());
   }
 
   render() {

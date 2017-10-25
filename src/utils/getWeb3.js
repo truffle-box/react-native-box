@@ -20,7 +20,7 @@ const getWeb3 = (mnemonic, rpcUrl) => {
     testRpcUrl = 'localhost';
   }
 
-  //var provider = new Web3.providers.HttpProvider('http://' + testRpcUrl + ':8545');
+  //var provider = new Web3.providers.HttpProvider(rpcUrl);
   // var provider = new HDWalletProvider('knee violin certain rebuild rival couch wonder bind bridge delay tourist poet', 'https://ropsten.infura.io/');
   const provider = new HDWalletProvider(mnemonic, rpcUrl);
 
