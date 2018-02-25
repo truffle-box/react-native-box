@@ -71,6 +71,14 @@ Like `npm start`, but also attempts to open your app in the iOS Simulator if you
 
 Like `npm start`, but also attempts to open your app on a connected Android device or emulator. Requires an installation of Android build tools (see [React Native docs](https://facebook.github.io/react-native/docs/getting-started.html) for detailed setup). We also recommend installing Genymotion as your Android emulator. Once you've finished setting up the native build environment, there are two options for making the right copy of `adb` available to Create React Native App:
 
+#### `npm run truffle`
+
+Runs the truffle command to compile and migrate your smart contracts in one go.
+
+#### `npm run start-rpc`
+
+Starts the local RPC network on port 8545
+
 ##### Using Android Studio's `adb`
 
 1. Make sure that you can run adb from your terminal.

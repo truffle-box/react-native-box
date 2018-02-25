@@ -4,7 +4,8 @@ module.exports = {
     development: {
       host: "localhost",
       port: 8545,
-      network_id: "*" // Match any network id
+      network_id: "*",
+      gas: 470000 // Match any network id
     }
   }
 };
