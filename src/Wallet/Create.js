@@ -4,9 +4,9 @@ import { Alert, StyleSheet, Text, View, TextInput } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import { Button, Card, ListItem } from 'react-native-elements';
 import { setWallet } from '../actions';
+import bip39 from 'react-native-bip39';
 
 const hdKey = require('ethereumjs-wallet/hdkey');
-const bip39 = require('bip39');
 
 const MINIMUM_PASSWORD_LENGTH = 8;
 
@@ -19,7 +19,7 @@ class Create extends React.Component {
   }
 
   async componentWillMount() {
-    let mnemonic = bip39.generateMnemonic();
+    let mnemonic = await bip39.generateMnemonic();
     this.setState({mnemonic});
   }
 
