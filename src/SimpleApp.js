@@ -23,20 +23,9 @@ const mapStateToProps = state => {
   }
 }
 
-const mapDispatchToProps = dispatch => {
-  return {    
-    setWallet: (mnemonic) => { 
-        dispatch({ type: 'SET_WALLET', wallet: mnemonic })
-    },
-    setAccount: (account) => { 
-        dispatch({ type: 'SET_ACCOUNT', account: account })    
-    }
-  }
-}
-
 const SimpleApp = connect(
     mapStateToProps,
-    mapDispatchToProps
+    null
 )(SimpleAppNav)
 
 export default SimpleApp;

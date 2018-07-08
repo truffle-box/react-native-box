@@ -108,3 +108,10 @@ export const getTransactions = (address) => {
             });      
     }
 }
+
+export const setWallet = (mnemonic) => {
+  return {
+      type: 'SET_WALLET',
+      wallet: mnemonic
+  };
+}

@@ -1,10 +1,12 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import getWeb3 from '../utils/getWeb3'
 import { Text, View, TextInput, Button, Modal } from 'react-native';
 import Web3 from 'web3';
 import { StackNavigator } from 'react-navigation';
+import { setWallet } from '../actions';
 
-export default class Import extends React.Component {
+class Import extends React.Component {
   constructor(props) {
     super(props);
 
@@ -21,7 +23,7 @@ export default class Import extends React.Component {
   onPressImport() {
     // Import Wallet
     let mnemonic = this.state.mnemonic;
-    this.props.screenProps.setWallet(mnemonic);
+    this.props.setWallet(mnemonic);
 
     // Navigate to Wallet screen
     this.props.navigation.navigate('Main');
@@ -47,3 +49,12 @@ export default class Import extends React.Component {
     );
   }
 }
+
+const mapDispatchToProps = {
+  setWallet
+};
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(Import);
