@@ -1,5 +1,7 @@
 # React Native Truffle Box
 
+**NOTE:** This box is deprecated. It is likely that some features in this box will not work as expected. Please reach out to [Truffle](https://www.trufflesuite.com/community) for help if you need it!
+
 **!!!WARNING!!!** This box is in active development and missing some important security features. Do not store any large balances in the included wallet. Do not deploy this to production.
 
 ## React Native
