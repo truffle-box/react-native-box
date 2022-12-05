@@ -1,15 +1,16 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import { Alert, StyleSheet, Text, View, TextInput } from 'react-native';
 import { StackNavigator } from 'react-navigation';
 import { Button, Card, ListItem } from 'react-native-elements';
+import { setWallet } from '../actions';
+import bip39 from 'react-native-bip39';
 
 const hdKey = require('ethereumjs-wallet/hdkey');
-const bip39 = require('bip39');
 
 const MINIMUM_PASSWORD_LENGTH = 8;
 
-export default class Create extends React.Component {
-
+class Create extends React.Component {
   constructor(props) {
     super(props);
     this.state = { mnemonic: '' }
@@ -18,13 +19,14 @@ export default class Create extends React.Component {
   }
 
   async componentWillMount() {
-    let mnemonic = bip39.generateMnemonic();
+    let mnemonic = await bip39.generateMnemonic();
     this.setState({mnemonic});
   }
 
   createWallet() {
     let mnemonic = this.state.mnemonic;
-    this.props.screenProps.setWallet(mnemonic);
+
+    this.props.setWallet(mnemonic);
     this.props.navigation.navigate('Main');
   }
 
@@ -45,3 +47,12 @@ export default class Create extends React.Component {
     );
   }
 }
+
+const mapDispatchToProps = {
+  setWallet
+};
+
+export default connect(
+  null,
+  mapDispatchToProps
+)(Create);
